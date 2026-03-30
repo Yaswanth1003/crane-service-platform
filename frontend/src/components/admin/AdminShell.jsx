@@ -1,7 +1,23 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+
+const titleContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.03 } },
+};
+
+const titleLetter = {
+  hidden: { opacity: 0, y: 10, filter: "blur(6px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.32, ease: "easeOut" },
+  },
+};
 
 const AdminShell = ({ title, subtitle, children }) => {
   const navigate = useNavigate();
@@ -53,7 +69,23 @@ const AdminShell = ({ title, subtitle, children }) => {
                     Dutta Cranes Admin
                   </p>
                 </div>
-                <h1 className="text-3xl font-bold">{title}</h1>
+                <motion.h1
+                  className="text-3xl font-bold"
+                  variants={titleContainer}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {String(title || "")
+                    .split("")
+                    .map((char, idx) => (
+                      <motion.span
+                        key={`${char}-${idx}`}
+                        variants={titleLetter}
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                </motion.h1>
                 {subtitle && <p className="text-blue-100 mt-1">{subtitle}</p>}
               </div>
 

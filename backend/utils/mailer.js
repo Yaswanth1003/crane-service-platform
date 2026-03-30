@@ -15,6 +15,12 @@ const nodemailer = require("nodemailer");
 const DEFAULT_TO_EMAIL =
   process.env.ADMIN_NOTIFICATION_EMAIL || "duttacraneservices@gmail.com";
 
+const SMTP_TIMEOUT_MS = Number(process.env.SMTP_TIMEOUT_MS || 10000);
+const EMAIL_RETRY_COUNT = Number(process.env.EMAIL_RETRY_COUNT || 2);
+const EMAIL_RETRY_DELAY_MS = Number(process.env.EMAIL_RETRY_DELAY_MS || 1000);
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 /**
  * Create email transporter based on environment configuration
  *
@@ -31,33 +37,83 @@ const DEFAULT_TO_EMAIL =
  *
  * @returns {Object|null} Nodemailer transporter object, or null if not configured
  */
-const createTransporter = () => {
-  const host = process.env.SMTP_HOST;
-  const service = process.env.SMTP_SERVICE;
-  const port = Number(process.env.SMTP_PORT || 587);
-  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+const createTransporter = ({ host, service, port, user, pass }) => {
+  const commonOptions = {
+    auth: { user, pass },
+    connectionTimeout: SMTP_TIMEOUT_MS,
+    greetingTimeout: SMTP_TIMEOUT_MS,
+    socketTimeout: SMTP_TIMEOUT_MS,
+  };
 
-  // Return null if credentials not provided (email will be skipped)
-  if (!user || !pass) {
-    return null;
-  }
-
-  // Use custom SMTP host if provided
   if (!host) {
     return nodemailer.createTransport({
       service: service || "gmail",
-      auth: { user, pass },
+      ...commonOptions,
     });
   }
 
-  // Use custom SMTP configuration
   return nodemailer.createTransport({
     host,
     port,
-    secure: port === 465, // Use TLS for port 465
-    auth: { user, pass },
+    secure: port === 465,
+    ...commonOptions,
   });
+};
+
+const createTransportCandidates = () => {
+  const candidates = [];
+
+  const primaryUser = process.env.SMTP_USER || process.env.EMAIL_USER;
+  const primaryPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+  if (primaryUser && primaryPass) {
+    candidates.push({
+      label: "primary",
+      from: primaryUser,
+      transporter: createTransporter({
+        host: process.env.SMTP_HOST,
+        service: process.env.SMTP_SERVICE,
+        port: Number(process.env.SMTP_PORT || 587),
+        user: primaryUser,
+        pass: primaryPass,
+      }),
+    });
+  }
+
+  const fallbackUser = process.env.SMTP_FALLBACK_USER;
+  const fallbackPass = process.env.SMTP_FALLBACK_PASS;
+  if (fallbackUser && fallbackPass) {
+    candidates.push({
+      label: "fallback",
+      from: fallbackUser,
+      transporter: createTransporter({
+        host: process.env.SMTP_FALLBACK_HOST,
+        service: process.env.SMTP_FALLBACK_SERVICE,
+        port: Number(process.env.SMTP_FALLBACK_PORT || 587),
+        user: fallbackUser,
+        pass: fallbackPass,
+      }),
+    });
+  }
+
+  return candidates;
+};
+
+const sendWithRetries = async ({ transporter, payload, label }) => {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= EMAIL_RETRY_COUNT + 1; attempt += 1) {
+    try {
+      await transporter.sendMail(payload);
+      return { ok: true, attempt, label };
+    } catch (error) {
+      lastError = error;
+      if (attempt <= EMAIL_RETRY_COUNT) {
+        await sleep(EMAIL_RETRY_DELAY_MS * attempt);
+      }
+    }
+  }
+
+  return { ok: false, error: lastError, label };
 };
 
 /**
@@ -74,35 +130,40 @@ const createTransporter = () => {
  * @returns {Promise<Object>} Result object with {skipped: boolean}
  */
 const sendEmail = async ({ to, subject, text, html }) => {
-  const transporter = createTransporter();
+  const candidates = createTransportCandidates();
 
-  // If SMTP not configured, log warning and skip sending
-  if (!transporter) {
+  if (candidates.length === 0) {
     console.warn(
-      `Email skipped (SMTP not configured). Configure SMTP_HOST/SMTP_USER/SMTP_PASS or EMAIL_USER/EMAIL_PASS. Subject: ${subject}`,
+      `Email skipped (SMTP not configured). Configure SMTP_USER/SMTP_PASS or EMAIL_USER/EMAIL_PASS. Subject: ${subject}`,
     );
     return { skipped: true };
   }
 
-  const from =
-    process.env.SMTP_FROM || process.env.SMTP_USER || process.env.EMAIL_USER;
+  let lastError = null;
 
-  // Avoid blocking API responses when SMTP is slow/unavailable
-  const timeoutMs = Number(process.env.EMAIL_TIMEOUT_MS || 8000);
+  for (const candidate of candidates) {
+    const from = process.env.SMTP_FROM || candidate.from;
+    const result = await sendWithRetries({
+      transporter: candidate.transporter,
+      label: candidate.label,
+      payload: { from, to, subject, text, html },
+    });
 
-  try {
-    await Promise.race([
-      transporter.sendMail({ from, to, subject, text, html }),
-      new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("Email send timeout")), timeoutMs);
-      }),
-    ]);
+    if (result.ok) {
+      return {
+        skipped: false,
+        provider: result.label,
+        attempt: result.attempt,
+      };
+    }
 
-    return { skipped: false };
-  } catch (error) {
-    console.error(`Email send failed for '${subject}':`, error.message);
-    return { skipped: true, error: error.message };
+    lastError = result.error;
+    console.error(
+      `Email send failed via ${result.label} provider for '${subject}': ${result.error?.message}`,
+    );
   }
+
+  return { skipped: true, error: lastError?.message || "Unknown mail error" };
 };
 
 /**
@@ -218,7 +279,7 @@ const sendContactFormEmail = async ({ name, email, message, phone }) => {
   const text = `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "-"}\n\nMessage:\n${message}`;
 
   return sendEmail({
-    to: "duttacraneservices@gmail.com",
+    to: DEFAULT_TO_EMAIL,
     subject,
     text,
     html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone || "-"}</p><p><strong>Message:</strong><br/>${message}</p>`,
