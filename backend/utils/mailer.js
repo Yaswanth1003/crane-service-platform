@@ -66,34 +66,69 @@ const createTransportCandidates = () => {
 
   const primaryUser = process.env.SMTP_USER || process.env.EMAIL_USER;
   const primaryPass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+  const primaryHost = process.env.SMTP_HOST;
+  const primaryService = process.env.SMTP_SERVICE;
+  const primaryPort = Number(process.env.SMTP_PORT || 587);
   if (primaryUser && primaryPass) {
     candidates.push({
       label: "primary",
       from: primaryUser,
       transporter: createTransporter({
-        host: process.env.SMTP_HOST,
-        service: process.env.SMTP_SERVICE,
-        port: Number(process.env.SMTP_PORT || 587),
+        host: primaryHost,
+        service: primaryService,
+        port: primaryPort,
         user: primaryUser,
         pass: primaryPass,
       }),
     });
+
+    // For Gmail credentials, also try explicit SMTP host as a fallback.
+    if (!primaryHost) {
+      candidates.push({
+        label: "primary-gmail-host",
+        from: primaryUser,
+        transporter: createTransporter({
+          host: "smtp.gmail.com",
+          service: undefined,
+          port: 465,
+          user: primaryUser,
+          pass: primaryPass,
+        }),
+      });
+    }
   }
 
   const fallbackUser = process.env.SMTP_FALLBACK_USER;
   const fallbackPass = process.env.SMTP_FALLBACK_PASS;
+  const fallbackHost = process.env.SMTP_FALLBACK_HOST;
+  const fallbackService = process.env.SMTP_FALLBACK_SERVICE;
+  const fallbackPort = Number(process.env.SMTP_FALLBACK_PORT || 587);
   if (fallbackUser && fallbackPass) {
     candidates.push({
       label: "fallback",
       from: fallbackUser,
       transporter: createTransporter({
-        host: process.env.SMTP_FALLBACK_HOST,
-        service: process.env.SMTP_FALLBACK_SERVICE,
-        port: Number(process.env.SMTP_FALLBACK_PORT || 587),
+        host: fallbackHost,
+        service: fallbackService,
+        port: fallbackPort,
         user: fallbackUser,
         pass: fallbackPass,
       }),
     });
+
+    if (!fallbackHost) {
+      candidates.push({
+        label: "fallback-gmail-host",
+        from: fallbackUser,
+        transporter: createTransporter({
+          host: "smtp.gmail.com",
+          service: undefined,
+          port: 465,
+          user: fallbackUser,
+          pass: fallbackPass,
+        }),
+      });
+    }
   }
 
   return candidates;
