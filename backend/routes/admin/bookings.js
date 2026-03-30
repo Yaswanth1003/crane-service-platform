@@ -3,7 +3,6 @@ const router = express.Router();
 const Booking = require("../../models/Booking");
 const authMiddleware = require("../../middleware/auth");
 const adminMiddleware = require("../../middleware/admin");
-const { hasOverlap } = require("../shared/bookingRules");
 const { sendUserBookingStatusEmail } = require("../../utils/mailer");
 
 router.get("/", authMiddleware, adminMiddleware, async (req, res) => {
@@ -39,23 +38,6 @@ router.patch(
       const booking = await Booking.findById(bookingId);
       if (!booking) {
         return res.status(404).json({ message: "Booking not found" });
-      }
-
-      if (status === "confirmed") {
-        const overlap = await hasOverlap({
-          serviceId: booking.serviceId,
-          startDate: booking.startDate,
-          endDate: booking.endDate,
-          excludeBookingId: booking._id,
-          onlyConfirmed: true,
-        });
-
-        if (overlap) {
-          return res.status(409).json({
-            message:
-              "Cannot confirm due to overlap with existing confirmed booking",
-          });
-        }
       }
 
       booking.status = status;

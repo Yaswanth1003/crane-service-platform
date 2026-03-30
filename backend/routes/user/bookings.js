@@ -6,7 +6,6 @@ const authMiddleware = require("../../middleware/auth");
 const {
   MIN_BOOKING_DAYS,
   getDayDiff,
-  hasOverlap,
 } = require("../shared/bookingRules");
 const { sendAdminNewBookingEmail } = require("../../utils/mailer");
 
@@ -35,19 +34,6 @@ router.get("/availability", async (req, res) => {
       return res.json({
         available: false,
         reason: `Minimum booking period is ${MIN_BOOKING_DAYS} days (6 months)`,
-      });
-    }
-
-    const overlap = await hasOverlap({
-      serviceId,
-      startDate: start,
-      endDate: end,
-    });
-
-    if (overlap) {
-      return res.json({
-        available: false,
-        reason: "Selected date range overlaps with an existing booking",
       });
     }
 
@@ -99,17 +85,6 @@ router.post("/", authMiddleware, async (req, res) => {
       return res.status(400).json({
         message: `Minimum booking period is ${MIN_BOOKING_DAYS} days (6 months)`,
       });
-    }
-
-    const overlap = await hasOverlap({
-      serviceId,
-      startDate: start,
-      endDate: end,
-    });
-    if (overlap) {
-      return res
-        .status(409)
-        .json({ message: "Service is not available for selected dates" });
     }
 
     const basePrice = bookingDays * service.pricePerDay;
