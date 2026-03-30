@@ -72,12 +72,16 @@ const handleRegister = async (req, res) => {
     // Save user to database
     await newUser.save();
 
-    // Send welcome email to new user
-    await sendWelcomeEmail({
-      name: newUser.name,
-      email: newUser.email,
-      contactNumber: newUser.contactNumber,
-    });
+    // Send welcome email best-effort: account creation must not fail if SMTP fails
+    try {
+      await sendWelcomeEmail({
+        name: newUser.name,
+        email: newUser.email,
+        contactNumber: newUser.contactNumber,
+      });
+    } catch (mailError) {
+      console.error("Welcome email failed:", mailError.message);
+    }
 
     // Generate JWT token (expires in 1 day)
     const token = jwt.sign(
