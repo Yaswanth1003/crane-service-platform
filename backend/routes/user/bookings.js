@@ -4,7 +4,6 @@ const Booking = require("../../models/Booking");
 const Service = require("../../models/Service");
 const authMiddleware = require("../../middleware/auth");
 const { MIN_BOOKING_DAYS, getDayDiff } = require("../shared/bookingRules");
-const { sendAdminNewBookingEmail } = require("../../utils/mailer");
 
 router.get("/availability", async (req, res) => {
   try {
@@ -104,29 +103,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     await newBooking.save();
 
-    const bookingWithDetails = await Booking.findById(newBooking._id)
-      .populate("serviceId")
-      .populate("userId", "name email contactNumber");
-
-    if (bookingWithDetails?.userId && bookingWithDetails?.serviceId) {
-      Promise.resolve(
-        sendAdminNewBookingEmail({
-          userName: bookingWithDetails.userId.name,
-          userEmail: bookingWithDetails.userId.email,
-          contactNumber: bookingWithDetails.userId.contactNumber,
-          serviceName: bookingWithDetails.serviceId.name,
-          serviceModel: bookingWithDetails.serviceId.model,
-          startDate: bookingWithDetails.startDate,
-          endDate: bookingWithDetails.endDate,
-          workLocation: bookingWithDetails.workLocation,
-          basePrice: bookingWithDetails.basePrice,
-          totalPrice: bookingWithDetails.totalPrice,
-        }),
-      ).catch((mailError) => {
-        console.error("Booking email notification failed:", mailError.message);
-      });
-    }
-
+    // Booking creation is completed without outbound notification side effects.
     return res.status(201).json({
       message: "Booking successful",
       booking: newBooking,

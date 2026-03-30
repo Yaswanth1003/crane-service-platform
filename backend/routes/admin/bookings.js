@@ -3,7 +3,6 @@ const router = express.Router();
 const Booking = require("../../models/Booking");
 const authMiddleware = require("../../middleware/auth");
 const adminMiddleware = require("../../middleware/admin");
-const { sendUserBookingStatusEmail } = require("../../utils/mailer");
 
 router.get("/", authMiddleware, adminMiddleware, async (req, res) => {
   try {
@@ -40,28 +39,9 @@ router.patch(
         return res.status(404).json({ message: "Booking not found" });
       }
 
+      // Status updates are persisted directly with no outbound email dependency.
       booking.status = status;
       await booking.save();
-
-      if (status === "confirmed" || status === "rejected") {
-        const populatedBooking = await Booking.findById(booking._id)
-          .populate("userId", "name email")
-          .populate("serviceId", "name model");
-
-        if (populatedBooking?.userId?.email) {
-          Promise.resolve(
-            sendUserBookingStatusEmail({
-              name: populatedBooking.userId.name,
-              email: populatedBooking.userId.email,
-              status,
-              serviceName:
-                `${populatedBooking.serviceId?.name || "Crane"} ${populatedBooking.serviceId?.model || ""}`.trim(),
-            }),
-          ).catch((mailError) => {
-            console.error("Booking status email failed:", mailError.message);
-          });
-        }
-      }
 
       return res.json({ message: `Booking ${status}`, booking });
     } catch (error) {

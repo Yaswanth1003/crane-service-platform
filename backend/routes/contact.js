@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const { sendContactFormEmail } = require("../utils/mailer");
 
 router.post("/", async (req, res) => {
   try {
@@ -12,12 +11,7 @@ router.post("/", async (req, res) => {
         .json({ message: "Name, email and message are required" });
     }
 
-    Promise.resolve(
-      sendContactFormEmail({ name, email, message, phone }),
-    ).catch((mailError) => {
-      console.error("Contact email notification failed:", mailError.message);
-    });
-
+    // Contact requests are accepted and handled by the app without email dispatch.
     return res.json({ message: "Message sent successfully" });
   } catch (error) {
     return res

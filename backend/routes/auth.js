@@ -13,7 +13,6 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { sendWelcomeEmail } = require("../utils/mailer");
 
 /**
  * Register a new user account
@@ -71,17 +70,6 @@ const handleRegister = async (req, res) => {
 
     // Save user to database
     await newUser.save();
-
-    // Send welcome email in background so registration response is immediate
-    Promise.resolve(
-      sendWelcomeEmail({
-        name: newUser.name,
-        email: newUser.email,
-        contactNumber: newUser.contactNumber,
-      }),
-    ).catch((mailError) => {
-      console.error("Welcome email failed:", mailError.message);
-    });
 
     // Generate JWT token (expires in 1 day)
     const token = jwt.sign(
