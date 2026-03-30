@@ -12,11 +12,11 @@ router.post("/", async (req, res) => {
         .json({ message: "Name, email and message are required" });
     }
 
-    try {
-      await sendContactFormEmail({ name, email, message, phone });
-    } catch (mailError) {
+    Promise.resolve(
+      sendContactFormEmail({ name, email, message, phone }),
+    ).catch((mailError) => {
       console.error("Contact email notification failed:", mailError.message);
-    }
+    });
 
     return res.json({ message: "Message sent successfully" });
   } catch (error) {

@@ -140,8 +140,8 @@ router.post("/", authMiddleware, async (req, res) => {
       .populate("userId", "name email contactNumber");
 
     if (bookingWithDetails?.userId && bookingWithDetails?.serviceId) {
-      try {
-        await sendAdminNewBookingEmail({
+      Promise.resolve(
+        sendAdminNewBookingEmail({
           userName: bookingWithDetails.userId.name,
           userEmail: bookingWithDetails.userId.email,
           contactNumber: bookingWithDetails.userId.contactNumber,
@@ -152,10 +152,10 @@ router.post("/", authMiddleware, async (req, res) => {
           workLocation: bookingWithDetails.workLocation,
           basePrice: bookingWithDetails.basePrice,
           totalPrice: bookingWithDetails.totalPrice,
-        });
-      } catch (mailError) {
+        }),
+      ).catch((mailError) => {
         console.error("Booking email notification failed:", mailError.message);
-      }
+      });
     }
 
     return res.status(201).json({

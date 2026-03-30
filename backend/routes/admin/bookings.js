@@ -67,12 +67,16 @@ router.patch(
           .populate("serviceId", "name model");
 
         if (populatedBooking?.userId?.email) {
-          await sendUserBookingStatusEmail({
-            name: populatedBooking.userId.name,
-            email: populatedBooking.userId.email,
-            status,
-            serviceName:
-              `${populatedBooking.serviceId?.name || "Crane"} ${populatedBooking.serviceId?.model || ""}`.trim(),
+          Promise.resolve(
+            sendUserBookingStatusEmail({
+              name: populatedBooking.userId.name,
+              email: populatedBooking.userId.email,
+              status,
+              serviceName:
+                `${populatedBooking.serviceId?.name || "Crane"} ${populatedBooking.serviceId?.model || ""}`.trim(),
+            }),
+          ).catch((mailError) => {
+            console.error("Booking status email failed:", mailError.message);
           });
         }
       }
