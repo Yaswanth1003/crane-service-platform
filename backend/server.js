@@ -41,7 +41,7 @@ app.use(express.json());
 app.get("/", (_req, res) => {
   res.status(200).json({
     status: "ok",
-    service: "Dutta Crane Services API",
+    service: "DATTA Crane Services API",
     docs: "/api/services",
   });
 });

@@ -47,12 +47,12 @@ const Footer = ({ mode = "public" }) => {
             <div className="flex items-center space-x-3 mb-6">
               <img
                 src="/company_logo.png"
-                alt="Dutta Cranes Logo"
+                alt="DATTA Cranes Logo"
                 className="w-14 h-14 rounded-full object-cover"
               />
               <div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-                  DUTTA CRANES
+                  DATTA CRANES
                 </span>
                 <p className="text-sm text-gray-400">
                   Professional crane & towing services
@@ -144,7 +144,7 @@ const Footer = ({ mode = "public" }) => {
                     d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                   />
                 </svg>
-                <span className="break-all">duttacraneservices@gmail.com</span>
+                <span className="break-all">DATTAcraneservices@gmail.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <svg
@@ -197,7 +197,7 @@ const Footer = ({ mode = "public" }) => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm">
               <span className="tabular-nums">
-                © {new Date().getFullYear()} Dutta Crane Service. All rights
+                © {new Date().getFullYear()} DATTA Crane Service. All rights
                 reserved. Owner: Omkar Chalkapure.
               </span>
             </div>

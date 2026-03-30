@@ -49,11 +49,11 @@ const Navbar = ({ mode = "public", onLogout }) => {
           >
             <img
               src="/company_logo.png"
-              alt="Dutta Cranes Logo"
+              alt="DATTA Cranes Logo"
               className="w-10 h-10 rounded-full object-cover"
             />
             <span className="text-2xl font-bold text-blue-600 transition-colors duration-300">
-              DUTTA CRANES
+              DATTA CRANES
             </span>
           </button>
           <div className="hidden lg:flex items-center space-x-8">

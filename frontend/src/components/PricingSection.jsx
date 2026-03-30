@@ -211,9 +211,7 @@ const PricingSection = () => {
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
             Available Models.{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              Clear Pricing.
-            </span>
+            <span className="text-blue-700">Clear Pricing.</span>
           </h2>
           <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-base sm:text-lg">
             All cranes come with a certified operator. Book by the hour or

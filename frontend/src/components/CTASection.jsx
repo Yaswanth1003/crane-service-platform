@@ -24,7 +24,7 @@ const CTASection = () => {
           </h3>
 
           <p className="text-slate-600 text-sm sm:text-base max-w-md mx-auto mb-8">
-            Join businesses that trust Dutta Crane Service for reliable,
+            Join businesses that trust DATTA Crane Service for reliable,
             professional heavy lifting and towing. Available for short-term and
             long-term contracts.
           </p>

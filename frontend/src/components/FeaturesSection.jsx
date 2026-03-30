@@ -194,7 +194,7 @@ const FeaturesSection = () => {
             Heavy Lifting & Towing
           </h2>
           <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-            From Hydra cranes to Farana cranes and emergency towing, Dutta Crane
+            From Hydra cranes to Farana cranes and emergency towing, DATTA Crane
             Service brings all your heavy equipment needs under one roof.
             Established 2010.
           </p>

@@ -62,11 +62,11 @@ const AdminShell = ({ title, subtitle, children }) => {
                 <div className="flex items-center gap-2 mb-2">
                   <img
                     src="/company_logo.png"
-                    alt="Dutta Cranes"
+                    alt="DATTA Cranes"
                     className="w-8 h-8 rounded-full object-cover shadow-md"
                   />
                   <p className="text-xs uppercase tracking-[0.2em] text-blue-100">
-                    Dutta Cranes Admin
+                    DATTA Cranes Admin
                   </p>
                 </div>
                 <motion.h1

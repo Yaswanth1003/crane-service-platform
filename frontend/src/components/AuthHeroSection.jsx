@@ -60,7 +60,7 @@ const AuthHeroSection = () => {
       </motion.h2>
 
       <p className="mt-5 max-w-xl text-slate-600 leading-relaxed">
-        Dutta Crane Service helps you schedule hydra cranes, farana cranes, and
+        DATTA Crane Service helps you schedule hydra cranes, farana cranes, and
         emergency towing quickly with transparent pricing and reliable
         operations.
       </p>
@@ -83,7 +83,7 @@ const AuthHeroSection = () => {
       </div>
 
       <div className="mt-12 pt-7 border-t border-slate-200 text-sm text-slate-600 max-w-xl">
-        <p className="font-semibold text-slate-900">Dutta Crane Service</p>
+        <p className="font-semibold text-blue-700">DATTA Crane Service</p>
         <p>Owner: Omkar Chalkapure | Since 2010</p>
         <p>
           RTO Check Post, Near KSRTC Bus Depot, Industrial Area, Humnabad -

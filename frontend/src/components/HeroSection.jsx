@@ -99,7 +99,7 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="mt-5 text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl"
           >
-            Dutta Crane Service — serving industrial and commercial clients
+            DATTA Crane Service — serving industrial and commercial clients
             since 2010. Hydra Cranes, Farana Cranes, and Emergency Towing in
             Humnabad and beyond.
           </motion.p>

@@ -188,7 +188,7 @@ const AboutSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              Dutta Crane Service has been the backbone of heavy lifting in
+              DATTA Crane Service has been the backbone of heavy lifting in
               Humnabad and surrounding districts since 2010. Owner{" "}
               <strong>Omkar Chalkapure</strong> built the company on a
               foundation of reliability and affordability — from a single crane

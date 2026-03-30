@@ -197,7 +197,7 @@ SMTP_PASS=your_app_password
 ADMIN_SETUP_KEY=setup_key_for_first_admin
 
 # Admin Notifications
-ADMIN_NOTIFICATION_EMAIL=admin@duttacranes.com
+ADMIN_NOTIFICATION_EMAIL=admin@DATTAcranes.com
 ```
 
 For frontend, create `.env.local`:

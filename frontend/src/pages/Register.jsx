@@ -58,11 +58,11 @@ const Register = () => {
             >
               <img
                 src="/company_logo.png"
-                alt="Dutta Cranes"
+                alt="DATTA Cranes"
                 className="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200 transition-transform duration-150 group-hover:scale-105"
               />
-              <span className="text-lg font-extrabold tracking-wide text-slate-900 dark:text-slate-100 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
-                DUTTA CRANES
+              <span className="text-lg font-extrabold tracking-wide text-blue-700 group-hover:text-blue-600 transition-colors">
+                DATTA CRANES
               </span>
             </Link>
 

@@ -83,10 +83,10 @@ const Contact = () => {
                 <span>8329672834</span>
               </a>
               <a
-                href="mailto:duttacraneservices@gmail.com"
+                href="mailto:DATTAcraneservices@gmail.com"
                 className="flex items-center gap-3 hover:underline"
               >
-                <span>duttacraneservices@gmail.com</span>
+                <span>DATTAcraneservices@gmail.com</span>
               </a>
               <p>
                 RTO Check Post, Near KSRTC Bus Depot, Industrial Area, Humnabad
