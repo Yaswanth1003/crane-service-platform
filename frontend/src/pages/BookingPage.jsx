@@ -92,7 +92,13 @@ const BookingPage = () => {
       alert("Booking created successfully! Check your dashboard.");
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Error creating booking");
+      if (err.code === "ECONNABORTED" || !err.response) {
+        setError(
+          "Server is waking up or unreachable. Please wait a few seconds and try again.",
+        );
+      } else {
+        setError(err.response?.data?.message || "Error creating booking");
+      }
     } finally {
       setSubmitting(false);
     }
