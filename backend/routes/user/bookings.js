@@ -10,8 +10,6 @@ const {
 } = require("../shared/bookingRules");
 const { sendAdminNewBookingEmail } = require("../../utils/mailer");
 
-const GST_PERCENTAGE = 0;
-
 router.get("/availability", async (req, res) => {
   try {
     const { serviceId, startDate, endDate } = req.query;
@@ -115,7 +113,6 @@ router.post("/", authMiddleware, async (req, res) => {
     }
 
     const basePrice = bookingDays * service.pricePerDay;
-    // Calculate total price without GST
     const totalPrice = basePrice;
 
     const newBooking = new Booking({

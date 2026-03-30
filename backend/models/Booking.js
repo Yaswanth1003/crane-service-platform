@@ -43,16 +43,10 @@ const bookingSchema = new mongoose.Schema(
       pincode: { type: String, required: true, trim: true },
     },
 
-    // Base rental price before taxes
+    // Base rental price
     basePrice: { type: Number, required: true },
 
-    // GST (Goods and Services Tax) percentage applied
-    gstPercentage: { type: Number, default: 0 },
-
-    // Calculated GST amount in rupees
-    gstAmount: { type: Number, required: true },
-
-    // Final total price (basePrice + gstAmount)
+    // Final total price
     totalPrice: { type: Number, required: true },
 
     // Booking status:
