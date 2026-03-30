@@ -87,9 +87,22 @@ const sendEmail = async ({ to, subject, text, html }) => {
   const from =
     process.env.SMTP_FROM || process.env.SMTP_USER || process.env.EMAIL_USER;
 
-  // Send email and return success status
-  await transporter.sendMail({ from, to, subject, text, html });
-  return { skipped: false };
+  // Avoid blocking API responses when SMTP is slow/unavailable
+  const timeoutMs = Number(process.env.EMAIL_TIMEOUT_MS || 8000);
+
+  try {
+    await Promise.race([
+      transporter.sendMail({ from, to, subject, text, html }),
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Email send timeout")), timeoutMs);
+      }),
+    ]);
+
+    return { skipped: false };
+  } catch (error) {
+    console.error(`Email send failed for '${subject}':`, error.message);
+    return { skipped: true, error: error.message };
+  }
 };
 
 /**
