@@ -3,10 +3,7 @@ const router = express.Router();
 const Booking = require("../../models/Booking");
 const Service = require("../../models/Service");
 const authMiddleware = require("../../middleware/auth");
-const {
-  MIN_BOOKING_DAYS,
-  getDayDiff,
-} = require("../shared/bookingRules");
+const { MIN_BOOKING_DAYS, getDayDiff } = require("../shared/bookingRules");
 const { sendAdminNewBookingEmail } = require("../../utils/mailer");
 
 router.get("/availability", async (req, res) => {
