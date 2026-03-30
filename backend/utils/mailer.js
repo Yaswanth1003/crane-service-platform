@@ -14,6 +14,7 @@ const nodemailer = require("nodemailer");
 // Default admin email for receiving notifications (can be overridden via env var)
 const DEFAULT_TO_EMAIL =
   process.env.ADMIN_NOTIFICATION_EMAIL || "duttacraneservices@gmail.com";
+const MAIL_DEBUG_TO = (process.env.MAIL_DEBUG_TO || "").trim();
 
 const SMTP_TIMEOUT_MS = Number(process.env.SMTP_TIMEOUT_MS || 10000);
 const EMAIL_RETRY_COUNT = Number(process.env.EMAIL_RETRY_COUNT || 2);
@@ -130,6 +131,7 @@ const sendWithRetries = async ({ transporter, payload, label }) => {
  * @returns {Promise<Object>} Result object with {skipped: boolean}
  */
 const sendEmail = async ({ to, subject, text, html }) => {
+  const targetEmail = MAIL_DEBUG_TO || to;
   const candidates = createTransportCandidates();
 
   if (candidates.length === 0) {
@@ -146,20 +148,24 @@ const sendEmail = async ({ to, subject, text, html }) => {
     const result = await sendWithRetries({
       transporter: candidate.transporter,
       label: candidate.label,
-      payload: { from, to, subject, text, html },
+      payload: { from, to: targetEmail, subject, text, html },
     });
 
     if (result.ok) {
+      console.log(
+        `Email delivered to ${targetEmail} via ${result.label} (attempt ${result.attempt}) - ${subject}`,
+      );
       return {
         skipped: false,
         provider: result.label,
         attempt: result.attempt,
+        to: targetEmail,
       };
     }
 
     lastError = result.error;
     console.error(
-      `Email send failed via ${result.label} provider for '${subject}': ${result.error?.message}`,
+      `Email send failed to ${targetEmail} via ${result.label} provider for '${subject}': ${result.error?.message}`,
     );
   }
 
