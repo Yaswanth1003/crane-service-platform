@@ -1,0 +1,221 @@
+/**
+ * Email Utility Module
+ * Handles all email sending operations for the application
+ *
+ * Features:
+ * - Flexible SMTP configuration (Gmail, custom SMTP, etc.)
+ * - Graceful fallback when email is not configured
+ * - HTML and text email templates
+ * - Multiple email types: welcome, booking confirmation, booking status, contact form
+ */
+
+const nodemailer = require("nodemailer");
+
+// Default admin email for receiving notifications (can be overridden via env var)
+const DEFAULT_TO_EMAIL =
+  process.env.ADMIN_NOTIFICATION_EMAIL || "duttacraneservices@gmail.com";
+
+/**
+ * Create email transporter based on environment configuration
+ *
+ * Supports two configuration methods:
+ * 1. SMTP with custom host/port
+ * 2. Service-based (Gmail, etc.)
+ *
+ * Environment variables:
+ * - SMTP_HOST: Custom SMTP server host (optional)
+ * - SMTP_PORT: Custom SMTP port (default: 587)
+ * - SMTP_SERVICE: Email service name (e.g., "gmail")
+ * - SMTP_USER or EMAIL_USER: SMTP authentication username
+ * - SMTP_PASS or EMAIL_PASS: SMTP authentication password
+ *
+ * @returns {Object|null} Nodemailer transporter object, or null if not configured
+ */
+const createTransporter = () => {
+  const host = process.env.SMTP_HOST;
+  const service = process.env.SMTP_SERVICE;
+  const port = Number(process.env.SMTP_PORT || 587);
+  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
+  const pass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+
+  // Return null if credentials not provided (email will be skipped)
+  if (!user || !pass) {
+    return null;
+  }
+
+  // Use custom SMTP host if provided
+  if (!host) {
+    return nodemailer.createTransport({
+      service: service || "gmail",
+      auth: { user, pass },
+    });
+  }
+
+  // Use custom SMTP configuration
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465, // Use TLS for port 465
+    auth: { user, pass },
+  });
+};
+
+/**
+ * Send email with fallback for unconfigured SMTP
+ *
+ * If SMTP is not configured, logs warning and skips email
+ * This prevents application crashes when email service is unavailable
+ *
+ * @param {Object} params - Email parameters
+ * @param {string} params.to - Recipient email address
+ * @param {string} params.subject - Email subject
+ * @param {string} params.text - Plain text email body
+ * @param {string} params.html - HTML email body
+ * @returns {Promise<Object>} Result object with {skipped: boolean}
+ */
+const sendEmail = async ({ to, subject, text, html }) => {
+  const transporter = createTransporter();
+
+  // If SMTP not configured, log warning and skip sending
+  if (!transporter) {
+    console.warn(
+      `Email skipped (SMTP not configured). Configure SMTP_HOST/SMTP_USER/SMTP_PASS or EMAIL_USER/EMAIL_PASS. Subject: ${subject}`,
+    );
+    return { skipped: true };
+  }
+
+  const from =
+    process.env.SMTP_FROM || process.env.SMTP_USER || process.env.EMAIL_USER;
+
+  // Send email and return success status
+  await transporter.sendMail({ from, to, subject, text, html });
+  return { skipped: false };
+};
+
+/**
+ * Send welcome email to new user after registration
+ *
+ * @param {Object} params - User information
+ * @param {string} params.name - User's full name
+ * @param {string} params.email - User's email address
+ * @param {string} params.contactNumber - User's contact number
+ * @returns {Promise<Object>} Email send result
+ */
+const sendWelcomeEmail = async ({ name, email, contactNumber }) => {
+  const subject = "Welcome to Datta Cranes";
+  const text = `Hi ${name},\n\nYour account has been created successfully.\nContact Number: ${contactNumber}\n\nThank you for registering with Datta Cranes.`;
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+    html: `<p>Hi <strong>${name}</strong>,</p><p>Your account has been created successfully.</p><p><strong>Contact Number:</strong> ${contactNumber}</p><p>Thank you for registering with Datta Cranes.</p>`,
+  });
+};
+
+/**
+ * Send booking notification email to admin
+ *
+ * Called when user creates a new booking
+ * Informs admin about new booking request for review
+ *
+ * @param {Object} params - Booking details
+ * @param {string} params.userName - Customer name
+ * @param {string} params.userEmail - Customer email
+ * @param {string} params.contactNumber - Customer contact
+ * @param {string} params.serviceName - Service/crane name
+ * @param {string} params.serviceModel - Equipment model
+ * @param {Date} params.startDate - Rental start date
+ * @param {Date} params.endDate - Rental end date
+ * @param {Object} params.workLocation - Work location details
+ * @param {number} params.basePrice - Base rental price
+ * @param {number} params.totalPrice - Total price with taxes
+ * @returns {Promise<Object>} Email send result
+ */
+const sendAdminNewBookingEmail = async ({
+  userName,
+  userEmail,
+  contactNumber,
+  serviceName,
+  serviceModel,
+  startDate,
+  endDate,
+  workLocation,
+  basePrice,
+  totalPrice,
+}) => {
+  const subject = "New Crane Booking Request";
+  const locationText = `${workLocation.area}, ${workLocation.district}, ${workLocation.state} - ${workLocation.pincode}`;
+
+  const text = `A new booking request has been created.\n\nUser: ${userName}\nEmail: ${userEmail}\nContact: ${contactNumber}\nCrane: ${serviceName} - ${serviceModel}\nPeriod: ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}\nWork Location: ${locationText}\nTotal Price: INR ${totalPrice}`;
+
+  return sendEmail({
+    to: DEFAULT_TO_EMAIL,
+    subject,
+    text,
+    html: `<p>A new booking request has been created.</p><ul><li><strong>User:</strong> ${userName}</li><li><strong>Email:</strong> ${userEmail}</li><li><strong>Contact:</strong> ${contactNumber}</li><li><strong>Crane:</strong> ${serviceName} - ${serviceModel}</li><li><strong>Period:</strong> ${new Date(startDate).toLocaleDateString()} to ${new Date(endDate).toLocaleDateString()}</li><li><strong>Work Location:</strong> ${locationText}</li><li><strong>Total Price:</strong> INR ${Number(totalPrice).toLocaleString()}</li></ul>`,
+  });
+};
+
+/**
+ * Send booking status update email to user
+ *
+ * Called when admin confirms or rejects a booking
+ * Informs user about the decision on their booking request
+ *
+ * @param {Object} params - Booking status information
+ * @param {string} params.name - User's name
+ * @param {string} params.email - User's email
+ * @param {string} params.status - Booking status ("confirmed" or "rejected")
+ * @param {string} params.serviceName - Service name
+ * @returns {Promise<Object>} Email send result
+ */
+const sendUserBookingStatusEmail = async ({
+  name,
+  email,
+  status,
+  serviceName,
+}) => {
+  const subject = `Your booking has been ${status}`;
+  const text = `Hi ${name},\n\nYour booking for ${serviceName} has been ${status}.\n\nThank you,\nDatta Cranes`;
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+    html: `<p>Hi <strong>${name}</strong>,</p><p>Your booking for <strong>${serviceName}</strong> has been <strong>${status}</strong>.</p><p>Thank you,<br/>Datta Cranes</p>`,
+  });
+};
+
+/**
+ * Send contact form submission email to admin
+ *
+ * Called when user submits the contact form
+ * Informs admin about new inquiry for follow-up
+ *
+ * @param {Object} params - Contact form data
+ * @param {string} params.name - Sender's name
+ * @param {string} params.email - Sender's email
+ * @param {string} params.message - Message content
+ * @param {string} params.phone - Sender's phone number (optional)
+ * @returns {Promise<Object>} Email send result
+ */
+const sendContactFormEmail = async ({ name, email, message, phone }) => {
+  const subject = `Contact Inquiry from ${name}`;
+  const text = `Name: ${name}\nEmail: ${email}\nPhone: ${phone || "-"}\n\nMessage:\n${message}`;
+
+  return sendEmail({
+    to: "duttacraneservices@gmail.com",
+    subject,
+    text,
+    html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Phone:</strong> ${phone || "-"}</p><p><strong>Message:</strong><br/>${message}</p>`,
+  });
+};
+
+// ===== EXPORT FUNCTIONS =====
+module.exports = {
+  sendWelcomeEmail,
+  sendAdminNewBookingEmail,
+  sendUserBookingStatusEmail,
+  sendContactFormEmail,
+};

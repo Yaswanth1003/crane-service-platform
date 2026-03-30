@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --theme-text: #1a1a1a;
+  --theme-bg: #f9fafb;
+  --theme-header: #ffffff;
+}
+
+body {
+  margin: 0;
+  color: var(--theme-text);
+  background-color: var(--theme-bg);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
