@@ -37,6 +37,15 @@ app.use(cors());
 // Parse incoming JSON request bodies
 app.use(express.json());
 
+// Root health endpoint for platform checks and browser visits
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "Dutta Crane Services API",
+    docs: "/api/services",
+  });
+});
+
 // ===== ROUTE REGISTRATION =====
 // Authentication routes (register, login, token validation)
 app.use("/api/auth", authRoutes);
