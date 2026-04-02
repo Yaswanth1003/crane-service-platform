@@ -44,10 +44,10 @@ const HeroSection = () => {
   return (
     <section
       id="hero"
-      className="relative isolate overflow-hidden min-h-[88vh] bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 flex items-center pt-24 pb-20"
+      className="relative isolate overflow-hidden min-h-[88vh] bg-gradient-to-br from-slate-50 via-orange-50 to-red-50 flex items-center pt-24 pb-20"
     >
-      <div className="pointer-events-none absolute -left-16 top-10 h-52 w-52 rounded-full bg-cyan-200/45 blur-3xl" />
-      <div className="pointer-events-none absolute -right-12 bottom-10 h-56 w-56 rounded-full bg-blue-200/45 blur-3xl" />
+      <div className="pointer-events-none absolute -left-16 top-10 h-52 w-52 rounded-full bg-red-200/45 blur-3xl" />
+      <div className="pointer-events-none absolute -right-12 bottom-10 h-56 w-56 rounded-full bg-orange-200/45 blur-3xl" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center flex flex-col items-center">
@@ -55,11 +55,11 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="inline-flex rounded-full border border-blue-200 bg-white/80 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700"
+            className="inline-flex rounded-full border border-orange-200 bg-white/80 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700"
             style={{
               backgroundColor: "var(--hero-kicker-bg, rgba(255,255,255,0.85))",
-              borderColor: "var(--hero-kicker-border, #bfdbfe)",
-              color: "var(--hero-kicker-text, #1d4ed8)",
+              borderColor: "var(--hero-kicker-border, #fed7aa)",
+              color: "var(--hero-kicker-text, #b45309)",
             }}
           >
             Est. 2010 | Humnabad Heavy Lift Partner
@@ -80,7 +80,7 @@ const HeroSection = () => {
             </motion.h1>
 
             <motion.h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-600 leading-[1.08] tracking-tight mt-1"
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-orange-600 leading-[1.08] tracking-tight mt-1"
               variants={container}
               initial="hidden"
               animate="visible"
@@ -113,17 +113,17 @@ const HeroSection = () => {
             {highlights.map((f, i) => (
               <div
                 key={i}
-                className="group inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-3.5 py-2 text-xs sm:text-sm text-slate-700"
+                className="group inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white/80 px-3.5 py-2 text-xs sm:text-sm text-slate-700"
                 style={{
                   backgroundColor:
                     "var(--hero-chip-bg, rgba(255,255,255,0.82))",
-                  borderColor: "var(--hero-chip-border, #dbeafe)",
+                  borderColor: "var(--hero-chip-border, #fef3c7)",
                   color: "var(--hero-chip-text, #334155)",
                 }}
               >
-                <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 transition-colors duration-200">
+                <div className="w-5 h-5 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0 group-hover:bg-orange-600 transition-colors duration-200">
                   <svg
-                    className="w-3 h-3 text-blue-600 group-hover:text-white transition-colors duration-200"
+                    className="w-3 h-3 text-orange-600 group-hover:text-white transition-colors duration-200"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -148,7 +148,7 @@ const HeroSection = () => {
             <button
               type="button"
               onClick={handleBookNow}
-              className="text-center px-6 py-3.5 bg-blue-700 text-white text-sm font-extrabold rounded-xl hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              className="text-center px-6 py-3.5 bg-orange-700 text-white text-sm font-extrabold rounded-xl hover:bg-orange-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
             >
               Book a Service Now
             </button>
@@ -164,7 +164,7 @@ const HeroSection = () => {
               {quickStats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="rounded-2xl border border-blue-100 bg-white px-4 py-4 hover:-translate-y-1 hover:border-blue-200 transition-all duration-300"
+                  className="rounded-2xl border border-orange-100 bg-white px-4 py-4 hover:-translate-y-1 hover:border-orange-200 transition-all duration-300"
                 >
                   <p className="text-2xl font-extrabold text-slate-900">
                     {stat.value}

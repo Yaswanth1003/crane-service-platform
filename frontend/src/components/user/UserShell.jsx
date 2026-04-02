@@ -57,7 +57,7 @@ const UserShell = ({ title, subtitle, children }) => {
           className="max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full"
           style={{ background: "transparent" }}
         >
-          <header className="bg-gradient-to-r from-blue-700 to-blue-500 text-white shadow-md rounded-2xl border border-blue-400/40">
+          <header className="bg-gradient-to-r from-red-700 to-red-500 text-white shadow-md rounded-2xl border border-red-400/40">
             <div className="p-4 sm:p-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                 <div>

@@ -52,7 +52,7 @@ const Navbar = ({ mode = "public", onLogout }) => {
               alt="DATTA Cranes Logo"
               className="w-10 h-10 rounded-full object-cover"
             />
-            <span className="text-2xl font-bold text-blue-600 transition-colors duration-300">
+            <span className="text-2xl font-bold text-orange-600 transition-colors duration-300">
               DATTA CRANES
             </span>
           </button>
@@ -62,7 +62,7 @@ const Navbar = ({ mode = "public", onLogout }) => {
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.path)}
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                  className="text-gray-700 hover:text-orange-600 font-medium transition-colors"
                 >
                   {item.name}
                 </button>
@@ -81,13 +81,13 @@ const Navbar = ({ mode = "public", onLogout }) => {
               <>
                 <button
                   onClick={() => navigate("/login")}
-                  className="px-6 py-2 text-blue-600 font-medium border border-blue-600 rounded-lg hover:bg-blue-50 transition"
+                  className="px-6 py-2 text-orange-600 font-medium border border-orange-600 rounded-lg hover:bg-orange-50 transition"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => navigate("/register")}
-                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+                  className="px-6 py-2 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700 transition"
                 >
                   Sign Up
                 </button>
@@ -97,7 +97,7 @@ const Navbar = ({ mode = "public", onLogout }) => {
           <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none rounded"
+              className="text-gray-700 hover:text-orange-600 focus:outline-none rounded"
             >
               <svg
                 className="h-6 w-6"
@@ -134,7 +134,7 @@ const Navbar = ({ mode = "public", onLogout }) => {
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.path)}
-                  className="text-gray-700 hover:text-blue-600 font-medium text-left px-4 py-2 rounded-lg hover:bg-blue-50 transition"
+                  className="text-gray-700 hover:text-orange-600 font-medium text-left px-4 py-2 rounded-lg hover:bg-orange-50 transition"
                 >
                   {item.name}
                 </button>
@@ -151,13 +151,13 @@ const Navbar = ({ mode = "public", onLogout }) => {
                   <>
                     <button
                       onClick={() => navigate("/login")}
-                      className="w-full px-4 py-2 text-blue-600 font-medium border border-blue-600 rounded-lg hover:bg-blue-50"
+                      className="w-full px-4 py-2 text-orange-600 font-medium border border-orange-600 rounded-lg hover:bg-orange-50"
                     >
                       Login
                     </button>
                     <button
                       onClick={() => navigate("/register")}
-                      className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+                      className="w-full px-4 py-2 bg-orange-600 text-white font-medium rounded-lg hover:bg-orange-700"
                     >
                       Sign Up
                     </button>

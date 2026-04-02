@@ -2,8 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const AuthHeroSection = () => {
-  const headlineTop = "Book Heavy Lifts,";
-  const headlineBottom = "Without the Stress";
+  const headlineTop = "Heavy Crane Booking";
+  const headlineBottom = "Made Simple";
 
   const container = {
     hidden: {},
@@ -32,7 +32,7 @@ const AuthHeroSection = () => {
   };
 
   return (
-    <div className="flex-1 px-8 lg:px-14 py-10 lg:py-16 flex flex-col justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="flex-1 px-8 lg:px-14 py-10 lg:py-16 flex flex-col justify-center bg-gradient-to-br from-slate-50 via-white to-red-50">
       <motion.h1
         className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900"
         variants={container}
@@ -47,7 +47,7 @@ const AuthHeroSection = () => {
       </motion.h1>
 
       <motion.h2
-        className="text-4xl md:text-5xl font-extrabold tracking-tight mt-1 text-blue-600"
+        className="text-4xl md:text-5xl font-extrabold tracking-tight mt-1 text-red-600"
         variants={container}
         initial="hidden"
         animate="visible"
@@ -60,36 +60,29 @@ const AuthHeroSection = () => {
       </motion.h2>
 
       <p className="mt-5 max-w-xl text-slate-600 leading-relaxed">
-        DATTA Crane Service helps you schedule hydra cranes, farana cranes, and
-        emergency towing quickly with transparent pricing and reliable
-        operations.
+        DATTA Crane Service gives you a fast way to book crane support with
+        clear pricing and dependable service.
       </p>
 
       <div className="mt-8 grid gap-3 max-w-lg">
         {[
-          "Hydra cranes: 12 Ton, 14 Ton",
-          "Farana cranes: F15, F17",
-          "Emergency towing and accident recovery",
-          "Fast booking with dashboard tracking",
+          "Hydra and Farana crane support",
+          "Emergency towing when you need it",
+          "Fast booking with transparent pricing",
         ].map((item) => (
           <div
             key={item}
             className="flex items-center gap-3 text-sm text-slate-700"
           >
-            <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+            <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
             <span>{item}</span>
           </div>
         ))}
       </div>
 
       <div className="mt-12 pt-7 border-t border-slate-200 text-sm text-slate-600 max-w-xl">
-        <p className="font-semibold text-blue-700">DATTA Crane Service</p>
-        <p>Owner: Omkar Chalkapure | Since 2010</p>
-        <p>
-          RTO Check Post, Near KSRTC Bus Depot, Industrial Area, Humnabad -
-          585330
-        </p>
-        <p>9008493555 | 8329672834 | craneservicesdurga@gmail.com</p>
+        <p className="font-semibold text-red-700">DATTA Crane Service</p>
+        <p>Trusted since 2010 for bookings, towing, and heavy lifts.</p>
       </div>
     </div>
   );

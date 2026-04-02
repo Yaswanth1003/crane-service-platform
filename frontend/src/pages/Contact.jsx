@@ -40,7 +40,7 @@ const Contact = () => {
           </p>
           <button
             onClick={() => setSubmitted(false)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-800 transition"
+            className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-800 transition"
           >
             Back to Contact
           </button>
@@ -58,14 +58,14 @@ const Contact = () => {
         transition={{ duration: 0.6 }}
       >
         <motion.div
-          className="bg-gradient-to-br from-blue-700 to-blue-500 text-white p-10 flex flex-col justify-between"
+          className="bg-gradient-to-br from-red-700 to-red-500 text-white p-10 flex flex-col justify-between"
           initial={{ x: -40, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
           <div>
             <h2 className="text-3xl font-bold mb-4">Contact Information</h2>
-            <p className="text-blue-200 mb-8">
+            <p className="text-red-100 mb-8">
               Reach out any time for bookings, contracts, and emergency towing.
             </p>
 
@@ -111,7 +111,7 @@ const Contact = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full border-b-2 border-gray-300 focus:border-blue-600 outline-none py-2"
+                className="w-full border-b-2 border-gray-300 focus:border-red-600 outline-none py-2"
                 placeholder="Your name"
               />
             </div>
@@ -124,7 +124,7 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full border-b-2 border-gray-300 focus:border-blue-600 outline-none py-2"
+                className="w-full border-b-2 border-gray-300 focus:border-red-600 outline-none py-2"
                 placeholder="Your email"
               />
             </div>
@@ -136,7 +136,7 @@ const Contact = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full border-b-2 border-gray-300 focus:border-blue-600 outline-none py-2"
+                className="w-full border-b-2 border-gray-300 focus:border-red-600 outline-none py-2"
                 placeholder="Your contact number"
               />
             </div>
@@ -149,7 +149,7 @@ const Contact = () => {
                 value={formData.message}
                 onChange={handleChange}
                 required
-                className="w-full border-b-2 border-gray-300 focus:border-blue-600 outline-none py-2 resize-none"
+                className="w-full border-b-2 border-gray-300 focus:border-red-600 outline-none py-2 resize-none"
                 placeholder="Write your message"
               />
             </div>
@@ -158,7 +158,7 @@ const Contact = () => {
               type="submit"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 rounded-lg bg-blue-600 hover:bg-blue-800 text-white transition"
+              className="px-8 py-3 rounded-lg bg-red-600 hover:bg-red-800 text-white transition"
             >
               Send Message
             </motion.button>

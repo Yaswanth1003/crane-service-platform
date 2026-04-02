@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { PhoneCall, MessageCircle } from "lucide-react";
 
 const Footer = ({ mode = "public" }) => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const Footer = ({ mode = "public" }) => {
     <footer id="contact" className="bg-gray-900 text-white min-h-[420px]">
       <style>{`
         footer a, footer a:visited { color: #ffffff !important; }
-        footer a:hover, footer a:focus { color: #60a5fa !important; }
+        footer a:hover, footer a:focus { color: #fb923c !important; }
       `}</style>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -51,7 +52,7 @@ const Footer = ({ mode = "public" }) => {
                 className="w-14 h-14 rounded-full object-cover"
               />
               <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
                   DATTA CRANES
                 </span>
                 <p className="text-sm text-gray-400">
@@ -72,32 +73,14 @@ const Footer = ({ mode = "public" }) => {
                 className="text-white hover:text-green-400 transition duration-300"
               >
                 <span className="sr-only">WhatsApp</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.148-.173.198-.297.297-.495.099-.198.05-.371-.025-.52-.075-.148-.67-1.611-.916-2.206-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.075-.793.371-.273.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.877 1.213 3.075.148.198 2.095 3.2 5.077 4.487.71.306 1.263.489 1.695.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.124-.272-.198-.57-.347" />
-                </svg>
+                <MessageCircle className="w-6 h-6" />
               </a>
               <a
                 href="tel:9008493555"
-                className="text-white hover:text-blue-400 transition duration-300"
+                className="text-white hover:text-red-400 transition duration-300"
               >
                 <span className="sr-only">Phone</span>
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
+                <PhoneCall className="w-6 h-6" />
               </a>
             </div>
           </div>
@@ -114,7 +97,7 @@ const Footer = ({ mode = "public" }) => {
                     <button
                       type="button"
                       onClick={() => scrollToSection(section)}
-                      className="inline-block text-white hover:text-blue-400 transition duration-300 text-left md:text-center"
+                      className="inline-block text-white hover:text-red-400 transition duration-300 text-left md:text-center"
                     >
                       {label}
                     </button>
@@ -132,7 +115,7 @@ const Footer = ({ mode = "public" }) => {
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-start space-x-3">
                 <svg
-                  className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0"
+                  className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -148,7 +131,7 @@ const Footer = ({ mode = "public" }) => {
               </li>
               <li className="flex items-start space-x-3">
                 <svg
-                  className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0"
+                  className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -166,7 +149,7 @@ const Footer = ({ mode = "public" }) => {
               </li>
               <li className="flex items-start space-x-3">
                 <svg
-                  className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0"
+                  className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

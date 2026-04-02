@@ -61,7 +61,7 @@ const Register = () => {
                 alt="DATTA Cranes"
                 className="h-11 w-11 rounded-full object-cover ring-1 ring-slate-200 transition-transform duration-150 group-hover:scale-105"
               />
-              <span className="text-lg font-extrabold tracking-wide text-blue-700 group-hover:text-blue-600 transition-colors">
+              <span className="text-lg font-extrabold tracking-wide text-red-700 group-hover:text-red-600 transition-colors">
                 DATTA CRANES
               </span>
             </Link>
@@ -86,7 +86,7 @@ const Register = () => {
                     />
                     <input
                       type="text"
-                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
@@ -107,7 +107,7 @@ const Register = () => {
                     />
                     <input
                       type="tel"
-                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500"
                       value={formData.contactNumber}
                       onChange={(e) =>
                         setFormData({
@@ -131,7 +131,7 @@ const Register = () => {
                     />
                     <input
                       type="email"
-                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                      className="w-full pl-10 pr-4 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
@@ -152,7 +152,7 @@ const Register = () => {
                     />
                     <input
                       type={showPassword ? "text" : "password"}
-                      className="w-full pl-10 pr-11 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500"
+                      className="w-full pl-10 pr-11 py-2.5 border-2 border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500"
                       value={formData.password}
                       onChange={(e) =>
                         setFormData({ ...formData, password: e.target.value })
@@ -175,7 +175,7 @@ const Register = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed transition"
+                  className="w-full bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 disabled:opacity-70 disabled:cursor-not-allowed transition"
                 >
                   {loading ? "Creating Account..." : "Create Account"}
                 </button>
@@ -189,7 +189,7 @@ const Register = () => {
                 Already have an account?{" "}
                 <Link
                   to="/login"
-                  className="text-blue-600 hover:underline font-medium"
+                  className="text-red-600 hover:underline font-medium"
                 >
                   Log in
                 </Link>

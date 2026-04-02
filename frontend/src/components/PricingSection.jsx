@@ -157,7 +157,7 @@ const TagBadge = ({ type }) => {
     },
     farana: {
       label: "Farana",
-      cls: "bg-blue-50 text-blue-700 border-blue-200",
+      cls: "bg-orange-50 text-orange-700 border-orange-200",
       Icon: FaranaIcon,
     },
     towing: {
@@ -192,10 +192,10 @@ const PricingSection = () => {
   return (
     <section
       id="fleet"
-      className="relative isolate overflow-hidden bg-gradient-to-b from-blue-50/60 via-slate-50 to-cyan-50/30 py-20"
+      className="relative isolate overflow-hidden bg-gradient-to-b from-orange-50/60 via-slate-50 to-red-50/30 py-20"
     >
-      <div className="pointer-events-none absolute -top-20 right-10 h-52 w-52 rounded-full bg-sky-200/35 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-10 h-56 w-56 rounded-full bg-cyan-200/25 blur-3xl" />
+      <div className="pointer-events-none absolute -top-20 right-10 h-52 w-52 rounded-full bg-orange-200/35 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-10 h-56 w-56 rounded-full bg-red-200/25 blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -206,12 +206,12 @@ const PricingSection = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.4 }}
         >
-          <span className="inline-flex rounded-full border border-blue-200 bg-white/80 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-700 shadow-sm">
+          <span className="inline-flex rounded-full border border-orange-200 bg-white/80 px-4 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-orange-700 shadow-sm">
             Our Fleet &amp; Pricing
           </span>
           <h2 className="mt-4 text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white">
             Available Models.{" "}
-            <span className="text-blue-700">Clear Pricing.</span>
+            <span className="text-orange-700">Clear Pricing.</span>
           </h2>
           <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-base sm:text-lg">
             All cranes come with a certified operator. Book by the hour or
@@ -229,10 +229,10 @@ const PricingSection = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
-              className="group relative bg-white rounded-2xl shadow-md border border-gray-200 hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:border-blue-400 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
+              className="group relative bg-white rounded-2xl shadow-md border border-gray-200 hover:scale-105 hover:shadow-xl hover:-translate-y-1 hover:border-orange-400 transition-all duration-300 flex flex-col cursor-pointer overflow-hidden"
             >
               {/* Hover shimmer overlay */}
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.12),transparent_44%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,146,60,0.12),transparent_44%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10" />
 
               {/* Crane Image — white bg forced via inline style so Arctic theme can't darken it */}
               <div
@@ -256,7 +256,7 @@ const PricingSection = () => {
                 <h3 className="text-base font-bold text-gray-900">
                   {plan.name}
                 </h3>
-                <p className="text-sm font-semibold text-blue-600 mt-0.5">
+                <p className="text-sm font-semibold text-orange-600 mt-0.5">
                   Model: {plan.model}
                 </p>
                 <p className="mt-2 text-gray-500 text-xs leading-relaxed">
@@ -269,7 +269,7 @@ const PricingSection = () => {
                     <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold">
                       Per Hour
                     </p>
-                    <span className="text-xl font-extrabold text-blue-700">
+                    <span className="text-xl font-extrabold text-orange-700">
                       {plan.hourly}
                     </span>
                   </div>
@@ -299,7 +299,7 @@ const PricingSection = () => {
                 {/* CTA */}
                 <button
                   onClick={handleBookNow}
-                  className="relative z-10 mt-6 w-full py-2.5 rounded-xl font-semibold text-sm border border-blue-700 text-blue-700 hover:bg-blue-700 hover:text-white hover:shadow-lg transition-all duration-300"
+                  className="relative z-10 mt-6 w-full py-2.5 rounded-xl font-semibold text-sm border border-orange-700 text-orange-700 hover:bg-orange-700 hover:text-white hover:shadow-lg transition-all duration-300"
                 >
                   Book {plan.model} Now
                 </button>
@@ -320,7 +320,7 @@ const PricingSection = () => {
           contract rates.{" "}
           <a
             href="tel:9008493555"
-            className="text-blue-600 font-medium hover:underline"
+            className="text-orange-600 font-medium hover:underline"
           >
             Call: 9008493555
           </a>

@@ -56,7 +56,7 @@ const AdminShell = ({ title, subtitle, children }) => {
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full"
           style={{ background: "transparent" }}
         >
-          <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg rounded-2xl border border-blue-500/40 p-4 sm:p-6">
+          <div className="bg-gradient-to-r from-red-900 to-red-700 text-white shadow-lg rounded-2xl border border-red-500/40 p-4 sm:p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
@@ -65,7 +65,7 @@ const AdminShell = ({ title, subtitle, children }) => {
                     alt="DATTA Cranes"
                     className="w-8 h-8 rounded-full object-cover shadow-md"
                   />
-                  <p className="text-xs uppercase tracking-[0.2em] text-blue-100">
+                  <p className="text-xs uppercase tracking-[0.2em] text-red-100">
                     DATTA Cranes Admin
                   </p>
                 </div>
@@ -86,7 +86,7 @@ const AdminShell = ({ title, subtitle, children }) => {
                       </motion.span>
                     ))}
                 </motion.h1>
-                {subtitle && <p className="text-blue-100 mt-1">{subtitle}</p>}
+                {subtitle && <p className="text-red-100 mt-1">{subtitle}</p>}
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
