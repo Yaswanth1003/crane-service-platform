@@ -27,7 +27,7 @@ const Login = () => {
     } catch (err) {
       if (err.code === "ECONNABORTED" || !err.response) {
         setError(
-          "Server unreachable. Make sure backend is running on port 5000.",
+          "Server unreachable. Please try again later.",
         );
       } else {
         setError(err.response?.data?.message || "Login failed");
