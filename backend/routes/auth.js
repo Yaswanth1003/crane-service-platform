@@ -102,7 +102,15 @@ const handleRegister = async (req, res) => {
       subject: "Welcome to DATTA Crane Services",
       text: welcomeTemplate.text,
       html: welcomeTemplate.html,
-    });
+    })
+      .then((mailResult) => {
+        if (!mailResult.sent) {
+          console.error("Welcome email failed:", mailResult.reason);
+        }
+      })
+      .catch((mailErr) => {
+        console.error("Welcome email exception:", mailErr.message);
+      });
   } catch (error) {
     res
       .status(500)

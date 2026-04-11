@@ -19,7 +19,7 @@ require("dotenv").config({ path: path.join(__dirname, ".env") }); // Load backen
 const express = require("express"); // Express framework for REST API
 const mongoose = require("mongoose"); // MongoDB ODM for database operations
 const cors = require("cors"); // Enable Cross-Origin Resource Sharing
-const { getMailerStatus } = require("./utils/mailer");
+const { getMailerStatus, verifyMailerConnection } = require("./utils/mailer");
 
 // ===== ROUTE IMPORTS =====
 const authRoutes = require("./routes/auth"); // User authentication (login, register)
@@ -81,6 +81,22 @@ app.listen(PORT, () => {
   const mailer = getMailerStatus();
   if (mailer.ok) {
     console.log(`✓ SMTP: ${mailer.reason}`);
+
+    verifyMailerConnection()
+      .then((verifyResult) => {
+        if (verifyResult.ok) {
+          console.log("✓ SMTP verify: connection/auth successful");
+        } else {
+          console.error("✗ SMTP verify failed:", {
+            reason: verifyResult.reason,
+            code: verifyResult.code,
+            response: verifyResult.response,
+          });
+        }
+      })
+      .catch((verifyErr) => {
+        console.error("✗ SMTP verify exception:", verifyErr.message);
+      });
   } else {
     console.warn(`✗ SMTP: ${mailer.reason}`);
   }
