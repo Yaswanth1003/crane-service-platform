@@ -3,10 +3,6 @@ const router = express.Router();
 const Booking = require("../../models/Booking");
 const authMiddleware = require("../../middleware/auth");
 const adminMiddleware = require("../../middleware/admin");
-const { sendMail } = require("../../utils/mailer");
-const {
-  buildUserBookingStatusTemplate,
-} = require("../../utils/emailTemplates");
 
 router.get("/", authMiddleware, adminMiddleware, async (req, res) => {
   try {
@@ -38,8 +34,7 @@ router.patch(
           .json({ message: "Status must be confirmed or rejected" });
       }
 
-      const booking =
-        await Booking.findById(bookingId).populate("userId serviceId");
+      const booking = await Booking.findById(bookingId);
       if (!booking) {
         return res.status(404).json({ message: "Booking not found" });
       }
@@ -47,32 +42,6 @@ router.patch(
       // Status updates are persisted directly with no outbound email dependency.
       booking.status = status;
       await booking.save();
-
-      if (booking.userId?.email) {
-        const serviceName = booking.serviceId
-          ? `${booking.serviceId.name} (${booking.serviceId.model})`
-          : "your selected service";
-
-        const statusTemplate = buildUserBookingStatusTemplate({
-          name: booking.userId.name,
-          serviceName,
-          startDate: booking.startDate,
-          endDate: booking.endDate,
-          totalPrice: booking.totalPrice,
-          status,
-        });
-
-        const userMailResult = await sendMail({
-          to: booking.userId.email,
-          subject: `Booking ${status === "confirmed" ? "Confirmed" : "Rejected"} - DATTA Crane Services`,
-          text: statusTemplate.text,
-          html: statusTemplate.html,
-        });
-
-        if (!userMailResult.sent) {
-          console.error("User status email failed:", userMailResult.reason);
-        }
-      }
 
       return res.json({ message: `Booking ${status}`, booking });
     } catch (error) {

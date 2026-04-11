@@ -26,7 +26,9 @@ const Login = () => {
       }
     } catch (err) {
       if (err.code === "ECONNABORTED" || !err.response) {
-        setError("Server unreachable. Please try again later.");
+        setError(
+          "Server unreachable. Please try again later.",
+        );
       } else {
         setError(err.response?.data?.message || "Login failed");
       }

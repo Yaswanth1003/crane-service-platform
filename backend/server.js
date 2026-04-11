@@ -12,14 +12,12 @@
  * - PORT: Server port (default: 5000)
  */
 
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, ".env") }); // Load backend .env regardless of launch cwd
+require("dotenv").config(); // Load environment variables from .env file
 
 // ===== IMPORTS =====
 const express = require("express"); // Express framework for REST API
 const mongoose = require("mongoose"); // MongoDB ODM for database operations
 const cors = require("cors"); // Enable Cross-Origin Resource Sharing
-const { getMailerStatus } = require("./utils/mailer");
 
 // ===== ROUTE IMPORTS =====
 const authRoutes = require("./routes/auth"); // User authentication (login, register)
@@ -77,11 +75,4 @@ mongoose
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✓ Server running on port ${PORT}`);
-
-  const mailer = getMailerStatus();
-  if (mailer.ok) {
-    console.log(`✓ SMTP: ${mailer.reason}`);
-  } else {
-    console.warn(`✗ SMTP: ${mailer.reason}`);
-  }
 });

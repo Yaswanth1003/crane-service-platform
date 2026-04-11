@@ -2,31 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../../models/Booking");
 const Service = require("../../models/Service");
-const User = require("../../models/User");
 const authMiddleware = require("../../middleware/auth");
 const { MIN_BOOKING_DAYS, getDayDiff } = require("../shared/bookingRules");
-const { sendMail } = require("../../utils/mailer");
-const {
-  buildUserBookingReceivedTemplate,
-  buildAdminBookingRequestTemplate,
-} = require("../../utils/emailTemplates");
-
-const getAdminRecipients = async () => {
-  const recipients = new Set();
-
-  if (process.env.ADMIN_NOTIFICATION_EMAIL) {
-    recipients.add(String(process.env.ADMIN_NOTIFICATION_EMAIL).trim());
-  }
-
-  const adminUsers = await User.find({ role: "admin" }).select("email");
-  adminUsers.forEach((admin) => {
-    if (admin?.email) {
-      recipients.add(String(admin.email).trim());
-    }
-  });
-
-  return [...recipients].filter(Boolean);
-};
 
 router.get("/availability", async (req, res) => {
   try {
@@ -125,52 +102,6 @@ router.post("/", authMiddleware, async (req, res) => {
     });
 
     await newBooking.save();
-
-    const user = await User.findById(req.user.id).select("name email");
-    const serviceName = `${service.name} (${service.model})`;
-
-    if (user?.email) {
-      const userTemplate = buildUserBookingReceivedTemplate({
-        name: user.name,
-        serviceName,
-        startDate: start,
-        endDate: end,
-        totalPrice,
-        bookingId: String(newBooking._id),
-      });
-
-      await sendMail({
-        to: user.email,
-        subject: "Booking Request Received - DATTA Crane Services",
-        text: userTemplate.text,
-        html: userTemplate.html,
-      });
-    }
-
-    const adminRecipients = await getAdminRecipients();
-    if (adminRecipients.length > 0) {
-      const adminTemplate = buildAdminBookingRequestTemplate({
-        customerName: user?.name,
-        customerEmail: user?.email,
-        serviceName,
-        startDate: start,
-        endDate: end,
-        totalPrice,
-        location: `${newBooking.workLocation.area}, ${newBooking.workLocation.district}, ${newBooking.workLocation.state} - ${newBooking.workLocation.pincode}`,
-        bookingId: String(newBooking._id),
-      });
-
-      const adminMailResult = await sendMail({
-        to: adminRecipients.join(","),
-        subject: "New Booking Request Received",
-        text: adminTemplate.text,
-        html: adminTemplate.html,
-      });
-
-      if (!adminMailResult.sent) {
-        console.error("Admin booking email failed:", adminMailResult.reason);
-      }
-    }
 
     // Booking creation is completed without outbound notification side effects.
     return res.status(201).json({
