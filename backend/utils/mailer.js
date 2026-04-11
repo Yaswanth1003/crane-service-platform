@@ -6,6 +6,9 @@ const SMTP_SECURE = process.env.SMTP_SECURE === "true";
 const SMTP_USER = process.env.SMTP_USER || process.env.EMAIL_USER || "";
 const SMTP_PASS_RAW = process.env.SMTP_PASS || process.env.EMAIL_PASS || "";
 const SMTP_PASS = String(SMTP_PASS_RAW).replace(/\s+/g, "");
+const SMTP_TIMEOUT_MS = Number(
+  process.env.SMTP_TIMEOUT_MS || process.env.EMAIL_TIMEOUT_MS || 10000,
+);
 const SMTP_CONFIGURED = Boolean(SMTP_USER && SMTP_PASS);
 
 let transporter;
@@ -26,6 +29,9 @@ const getTransporter = () => {
         host: SMTP_HOST,
         port: SMTP_PORT,
         secure: SMTP_SECURE,
+        connectionTimeout: SMTP_TIMEOUT_MS,
+        greetingTimeout: SMTP_TIMEOUT_MS,
+        socketTimeout: SMTP_TIMEOUT_MS,
         auth: {
           user: SMTP_USER,
           pass: SMTP_PASS,
@@ -33,6 +39,9 @@ const getTransporter = () => {
       })
     : nodemailer.createTransport({
         service: "gmail",
+        connectionTimeout: SMTP_TIMEOUT_MS,
+        greetingTimeout: SMTP_TIMEOUT_MS,
+        socketTimeout: SMTP_TIMEOUT_MS,
         auth: {
           user: SMTP_USER,
           pass: SMTP_PASS,
@@ -69,7 +78,11 @@ const sendMail = async ({ to, subject, text, html }) => {
 
     return { sent: true };
   } catch (error) {
-    console.error("Email send failed:", error.message);
+    console.error("Email send failed:", {
+      message: error.message,
+      code: error.code,
+      response: error.response,
+    });
     return { sent: false, reason: error.message };
   }
 };
