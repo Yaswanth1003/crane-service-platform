@@ -8,6 +8,8 @@ const AdminUsersPage = () => {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [roleUpdatingId, setRoleUpdatingId] = useState("");
+  const [deletingId, setDeletingId] = useState("");
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -27,11 +29,14 @@ const AdminUsersPage = () => {
   }, []);
 
   const updateRole = async (userId, role) => {
+    setRoleUpdatingId(userId);
     try {
       await api.patch(`/admin/users/${userId}/role`, { role });
-      fetchUsers();
+      await fetchUsers();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update role");
+    } finally {
+      setRoleUpdatingId("");
     }
   };
 
@@ -44,10 +49,13 @@ const AdminUsersPage = () => {
     }
 
     try {
+      setDeletingId(userId);
       await api.delete(`/admin/users/${userId}`);
-      fetchUsers();
+      await fetchUsers();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete user");
+    } finally {
+      setDeletingId("");
     }
   };
 
@@ -275,38 +283,51 @@ const AdminUsersPage = () => {
                       {user.role === "admin" ? (
                         <button
                           onClick={() => updateRole(user._id, "user")}
-                          className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105"
+                          disabled={
+                            roleUpdatingId === user._id || deletingId === user._id
+                          }
+                          className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
                           style={{
                             borderColor: "var(--dc-border, #d1d5db)",
                             color: "var(--dc-text, #374151)",
                             background: "var(--dc-surface, white)",
                           }}
                         >
-                          Set User
+                          {roleUpdatingId === user._id
+                            ? "Updating..."
+                            : "Set User"}
                         </button>
                       ) : (
                         <button
                           onClick={() => updateRole(user._id, "admin")}
-                          className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105"
+                          disabled={
+                            roleUpdatingId === user._id || deletingId === user._id
+                          }
+                          className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
                           style={{
                             borderColor: "var(--dc-border, #d1d5db)",
                             color: "var(--dc-text, #374151)",
                             background: "var(--dc-surface, white)",
                           }}
                         >
-                          Set Admin
+                          {roleUpdatingId === user._id
+                            ? "Updating..."
+                            : "Set Admin"}
                         </button>
                       )}
                       <button
                         onClick={() => deleteUser(user._id)}
-                        className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105"
+                        disabled={
+                          roleUpdatingId === user._id || deletingId === user._id
+                        }
+                        className="w-28 px-3 py-1.5 rounded-lg text-sm border transition-all duration-150 hover:bg-slate-100 dark:hover:bg-slate-700/70 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
                         style={{
                           borderColor: "var(--dc-border, #d1d5db)",
                           color: "var(--dc-text, #374151)",
                           background: "var(--dc-surface, white)",
                         }}
                       >
-                        Delete
+                        {deletingId === user._id ? "Deleting..." : "Delete"}
                       </button>
                     </td>
                   </tr>

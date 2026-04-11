@@ -12,12 +12,6 @@ const initialForm = {
   imageUrl: "",
 };
 
-// Return null for all images - no fallback defaults
-const getImageForService = (name, model) => {
-  // Only return image if explicitly provided in service.imageUrl
-  return null;
-};
-
 const AdminServicesPage = () => {
   const [services, setServices] = useState([]);
   const [form, setForm] = useState(initialForm);
@@ -145,6 +139,7 @@ const AdminServicesPage = () => {
   };
 
   const filteredServices = services.filter((service) => {
+    // Keep filtering predictable across text, category, and extracted tonnage.
     const query = searchTerm.trim().toLowerCase();
     const matchesQuery =
       !query ||
@@ -486,9 +481,7 @@ const AdminServicesPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredServices.map((service) => {
-                const displayImage =
-                  service.imageUrl ||
-                  getImageForService(service.name, service.model);
+                const displayImage = service.imageUrl;
 
                 return (
                   <div

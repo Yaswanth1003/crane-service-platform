@@ -8,6 +8,8 @@ const AdminBookingsPage = () => {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [statusUpdatingId, setStatusUpdatingId] = useState("");
+  const [statusUpdatingAction, setStatusUpdatingAction] = useState("");
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -27,13 +29,19 @@ const AdminBookingsPage = () => {
   }, []);
 
   const updateStatus = async (bookingId, status) => {
+    // Lock action buttons for the current row while status update is in-flight.
+    setStatusUpdatingId(bookingId);
+    setStatusUpdatingAction(status);
     try {
       await api.patch(`/admin/bookings/${bookingId}/status`, { status });
-      fetchBookings();
+      await fetchBookings();
     } catch (err) {
       setError(
         err.response?.data?.message || "Failed to update booking status",
       );
+    } finally {
+      setStatusUpdatingId("");
+      setStatusUpdatingAction("");
     }
   };
 
@@ -287,13 +295,7 @@ const AdminBookingsPage = () => {
                       className="p-3 text-slate-900 font-semibold"
                       style={{ color: "var(--dc-heading, #111827)" }}
                     >
-                      <p>₹{Number(booking.totalPrice || 0).toLocaleString()}</p>
-                      <p
-                        className="text-xs text-slate-500 font-normal"
-                        style={{ color: "var(--dc-muted, #6b7280)" }}
-                      >
-                        ₹{Number(booking.totalPrice || 0).toLocaleString()}
-                      </p>
+                      ₹{Number(booking.totalPrice || 0).toLocaleString()}
                     </td>
                     <td className="p-3">
                       <span
@@ -331,17 +333,25 @@ const AdminBookingsPage = () => {
                             onClick={() =>
                               updateStatus(booking._id, "confirmed")
                             }
-                            className="px-3 py-1.5 rounded-lg text-sm bg-green-600 text-white"
+                            disabled={statusUpdatingId === booking._id}
+                            className="px-3 py-1.5 rounded-lg text-sm bg-green-600 text-white disabled:opacity-70 disabled:cursor-not-allowed"
                           >
-                            Accept
+                            {statusUpdatingId === booking._id &&
+                            statusUpdatingAction === "confirmed"
+                              ? "Accepting..."
+                              : "Accept"}
                           </button>
                           <button
                             onClick={() =>
                               updateStatus(booking._id, "rejected")
                             }
-                            className="px-3 py-1.5 rounded-lg text-sm bg-red-600 text-white"
+                            disabled={statusUpdatingId === booking._id}
+                            className="px-3 py-1.5 rounded-lg text-sm bg-red-600 text-white disabled:opacity-70 disabled:cursor-not-allowed"
                           >
-                            Reject
+                            {statusUpdatingId === booking._id &&
+                            statusUpdatingAction === "rejected"
+                              ? "Rejecting..."
+                              : "Reject"}
                           </button>
                         </div>
                       ) : (
