@@ -1,8 +1,13 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+
+// Render may not have working IPv6 egress for some SMTP endpoints; prefer IPv4.
+dns.setDefaultResultOrder("ipv4first");
 
 const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_HOST = process.env.SMTP_HOST || "";
 const SMTP_SECURE = process.env.SMTP_SECURE === "true";
+const SMTP_IP_FAMILY = Number(process.env.SMTP_IP_FAMILY || 4);
 const SMTP_USER = process.env.SMTP_USER || process.env.EMAIL_USER || "";
 const SMTP_PASS_RAW = process.env.SMTP_PASS || process.env.EMAIL_PASS || "";
 const SMTP_PASS = String(SMTP_PASS_RAW).replace(/\s+/g, "");
@@ -29,6 +34,7 @@ const getTransporter = () => {
         host: SMTP_HOST,
         port: SMTP_PORT,
         secure: SMTP_SECURE,
+        family: SMTP_IP_FAMILY,
         connectionTimeout: SMTP_TIMEOUT_MS,
         greetingTimeout: SMTP_TIMEOUT_MS,
         socketTimeout: SMTP_TIMEOUT_MS,
@@ -39,6 +45,7 @@ const getTransporter = () => {
       })
     : nodemailer.createTransport({
         service: "gmail",
+      family: SMTP_IP_FAMILY,
         connectionTimeout: SMTP_TIMEOUT_MS,
         greetingTimeout: SMTP_TIMEOUT_MS,
         socketTimeout: SMTP_TIMEOUT_MS,
