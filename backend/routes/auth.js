@@ -105,8 +105,22 @@ const handleRegister = async (req, res) => {
     })
       .then((mailResult) => {
         if (!mailResult.sent) {
-          console.error("Welcome email failed:", mailResult.reason);
+          console.error("Welcome email failed:", {
+            reason: mailResult.reason,
+            accepted: mailResult.accepted,
+            rejected: mailResult.rejected,
+            messageId: mailResult.messageId,
+            response: mailResult.response,
+          });
+          return;
         }
+
+        console.log("Welcome email sent:", {
+          to: newUser.email,
+          accepted: mailResult.accepted,
+          rejected: mailResult.rejected,
+          messageId: mailResult.messageId,
+        });
       })
       .catch((mailErr) => {
         console.error("Welcome email exception:", mailErr.message);
