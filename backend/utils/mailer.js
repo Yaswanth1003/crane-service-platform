@@ -1,6 +1,5 @@
 const nodemailer = require("nodemailer");
 const dns = require("dns");
-const net = require("net");
 
 // Render may not have working IPv6 egress for some SMTP endpoints; prefer IPv4.
 dns.setDefaultResultOrder("ipv4first");
@@ -9,7 +8,6 @@ const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_HOST = process.env.SMTP_HOST || "";
 const SMTP_SECURE = process.env.SMTP_SECURE === "true";
 const SMTP_IP_FAMILY = Number(process.env.SMTP_IP_FAMILY || 4);
-const SMTP_FORCE_IPV4 = process.env.SMTP_FORCE_IPV4 !== "false";
 const SMTP_USER = process.env.SMTP_USER || process.env.EMAIL_USER || "";
 const SMTP_PASS_RAW = process.env.SMTP_PASS || process.env.EMAIL_PASS || "";
 const SMTP_PASS = String(SMTP_PASS_RAW).replace(/\s+/g, "");
@@ -19,30 +17,6 @@ const SMTP_TIMEOUT_MS = Number(
 const SMTP_CONFIGURED = Boolean(SMTP_USER && SMTP_PASS);
 
 let transporter;
-
-const getIpv4Socket = (options, callback) => {
-  dns.lookup(options.host, { family: 4, all: false }, (lookupErr, address) => {
-    if (lookupErr) {
-      callback(lookupErr);
-      return;
-    }
-
-    const socket = net.connect({
-      host: address,
-      port: options.port,
-    });
-
-    let settled = false;
-    const done = (err, data) => {
-      if (settled) return;
-      settled = true;
-      callback(err, data);
-    };
-
-    socket.once("error", (socketErr) => done(socketErr));
-    socket.once("connect", () => done(null, { connection: socket }));
-  });
-};
 
 const getTransporter = () => {
   if (transporter) {
@@ -61,7 +35,6 @@ const getTransporter = () => {
         port: SMTP_PORT,
         secure: SMTP_SECURE,
         family: SMTP_IP_FAMILY,
-        ...(SMTP_FORCE_IPV4 ? { getSocket: getIpv4Socket } : {}),
         connectionTimeout: SMTP_TIMEOUT_MS,
         greetingTimeout: SMTP_TIMEOUT_MS,
         socketTimeout: SMTP_TIMEOUT_MS,
@@ -72,8 +45,7 @@ const getTransporter = () => {
       })
     : nodemailer.createTransport({
         service: "gmail",
-        family: SMTP_IP_FAMILY,
-        ...(SMTP_FORCE_IPV4 ? { getSocket: getIpv4Socket } : {}),
+      family: SMTP_IP_FAMILY,
         connectionTimeout: SMTP_TIMEOUT_MS,
         greetingTimeout: SMTP_TIMEOUT_MS,
         socketTimeout: SMTP_TIMEOUT_MS,
