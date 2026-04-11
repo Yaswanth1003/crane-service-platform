@@ -110,27 +110,7 @@ const getMailerStatus = () => {
   };
 };
 
-const verifyMailerConnection = async () => {
-  try {
-    const activeTransporter = getTransporter();
-    if (!activeTransporter) {
-      return { ok: false, reason: "smtp-not-configured" };
-    }
-
-    await activeTransporter.verify();
-    return { ok: true, reason: "smtp-verify-success" };
-  } catch (error) {
-    return {
-      ok: false,
-      reason: error.message,
-      code: error.code,
-      response: error.response,
-    };
-  }
-};
-
 module.exports = {
   sendMail,
   getMailerStatus,
-  verifyMailerConnection,
 };
