@@ -13,6 +13,8 @@ const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { sendMail } = require("../utils/mailer");
+const { buildUserWelcomeTemplate } = require("../utils/emailTemplates");
 
 /**
  * Register a new user account
@@ -89,6 +91,17 @@ const handleRegister = async (req, res) => {
         email: newUser.email,
         role: newUser.role,
       },
+    });
+
+    const welcomeTemplate = buildUserWelcomeTemplate({
+      name: newUser.name,
+    });
+
+    sendMail({
+      to: newUser.email,
+      subject: "Welcome to DATTA Crane Services",
+      text: welcomeTemplate.text,
+      html: welcomeTemplate.html,
     });
   } catch (error) {
     res
