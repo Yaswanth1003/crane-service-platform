@@ -103,7 +103,7 @@ const sendMail = async ({ to, subject, text, html }) => {
       return { sent: false, reason: "smtp-not-configured" };
     }
 
-    const info = await activeTransporter.sendMail({
+    await activeTransporter.sendMail({
       from: getFromAddress(),
       to,
       subject,
@@ -111,28 +111,7 @@ const sendMail = async ({ to, subject, text, html }) => {
       html,
     });
 
-    const accepted = Array.isArray(info.accepted) ? info.accepted : [];
-    const rejected = Array.isArray(info.rejected) ? info.rejected : [];
-    const delivered = accepted.length > 0 && rejected.length < accepted.length;
-
-    if (!delivered) {
-      return {
-        sent: false,
-        reason: "smtp-recipient-rejected",
-        accepted,
-        rejected,
-        messageId: info.messageId,
-        response: info.response,
-      };
-    }
-
-    return {
-      sent: true,
-      accepted,
-      rejected,
-      messageId: info.messageId,
-      response: info.response,
-    };
+    return { sent: true };
   } catch (error) {
     console.error("Email send failed:", {
       message: error.message,
