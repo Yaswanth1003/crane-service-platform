@@ -11,66 +11,6 @@ const {
   buildAdminBookingRequestTemplate,
 } = require("../../utils/emailTemplates");
 
-const sendBookingNotificationsInBackground = async ({
-  user,
-  serviceName,
-  start,
-  end,
-  totalPrice,
-  booking,
-}) => {
-  try {
-    if (user?.email) {
-      const userTemplate = buildUserBookingReceivedTemplate({
-        name: user.name,
-        serviceName,
-        startDate: start,
-        endDate: end,
-        totalPrice,
-        bookingId: String(booking._id),
-      });
-
-      const userMailResult = await sendMail({
-        to: user.email,
-        subject: "Booking Request Received - DATTA Crane Services",
-        text: userTemplate.text,
-        html: userTemplate.html,
-      });
-
-      if (!userMailResult.sent) {
-        console.error("User booking email failed:", userMailResult.reason);
-      }
-    }
-
-    const adminRecipients = await getAdminRecipients();
-    if (adminRecipients.length > 0) {
-      const adminTemplate = buildAdminBookingRequestTemplate({
-        customerName: user?.name,
-        customerEmail: user?.email,
-        serviceName,
-        startDate: start,
-        endDate: end,
-        totalPrice,
-        location: `${booking.workLocation.area}, ${booking.workLocation.district}, ${booking.workLocation.state} - ${booking.workLocation.pincode}`,
-        bookingId: String(booking._id),
-      });
-
-      const adminMailResult = await sendMail({
-        to: adminRecipients.join(","),
-        subject: "New Booking Request Received",
-        text: adminTemplate.text,
-        html: adminTemplate.html,
-      });
-
-      if (!adminMailResult.sent) {
-        console.error("Admin booking email failed:", adminMailResult.reason);
-      }
-    }
-  } catch (error) {
-    console.error("Booking notification flow failed:", error.message);
-  }
-};
-
 const getAdminRecipients = async () => {
   const recipients = new Set();
 
@@ -189,18 +129,50 @@ router.post("/", authMiddleware, async (req, res) => {
     const user = await User.findById(req.user.id).select("name email");
     const serviceName = `${service.name} (${service.model})`;
 
-    // Respond first; do notifications out-of-band so slow SMTP never blocks bookings.
-    setImmediate(() => {
-      sendBookingNotificationsInBackground({
-        user,
+    if (user?.email) {
+      const userTemplate = buildUserBookingReceivedTemplate({
+        name: user.name,
         serviceName,
-        start,
-        end,
+        startDate: start,
+        endDate: end,
         totalPrice,
-        booking: newBooking,
+        bookingId: String(newBooking._id),
       });
-    });
 
+      await sendMail({
+        to: user.email,
+        subject: "Booking Request Received - DATTA Crane Services",
+        text: userTemplate.text,
+        html: userTemplate.html,
+      });
+    }
+
+    const adminRecipients = await getAdminRecipients();
+    if (adminRecipients.length > 0) {
+      const adminTemplate = buildAdminBookingRequestTemplate({
+        customerName: user?.name,
+        customerEmail: user?.email,
+        serviceName,
+        startDate: start,
+        endDate: end,
+        totalPrice,
+        location: `${newBooking.workLocation.area}, ${newBooking.workLocation.district}, ${newBooking.workLocation.state} - ${newBooking.workLocation.pincode}`,
+        bookingId: String(newBooking._id),
+      });
+
+      const adminMailResult = await sendMail({
+        to: adminRecipients.join(","),
+        subject: "New Booking Request Received",
+        text: adminTemplate.text,
+        html: adminTemplate.html,
+      });
+
+      if (!adminMailResult.sent) {
+        console.error("Admin booking email failed:", adminMailResult.reason);
+      }
+    }
+
+    // Booking creation is completed without outbound notification side effects.
     return res.status(201).json({
       message: "Booking successful",
       booking: newBooking,
